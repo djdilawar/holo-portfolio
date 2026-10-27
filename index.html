@@ -775,7 +775,7 @@ h2{font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1}
       '<div class="medal" style="--i:'+k+'">'+hexSVG(c.g[0], c.g[1], k)+'<span class="code">'+c.code+'<small>'+c.sub+'</small></span></div>';
     var b = c.back, back;
     var gaugeHTML = b.gauge ? '<div class="gauge"><svg viewBox="0 0 150 150"><circle class="bg" cx="75" cy="75" r="60"/><circle class="fg" cx="75" cy="75" r="60" stroke-dasharray="377" stroke-dashoffset="377" data-off="'+(377*(1-b.gauge/100)).toFixed(1)+'"/></svg><div class="val">'+b.val+'<small>'+b.unit+'</small></div></div>' : '';
-    if(b.gauge && b.ticks){ back = '<div class="duo"><div class="duo-in"><div class="pane score">'+gaugeHTML+'<div class="again">Flip again for details ↻</div></div><div class="pane about"><div class="ticks">'+b.ticks.map(function(t){ return '<span>'+t+'</span>'; }).join('')+'</div></div></div></div>'; }
+    if(b.gauge && b.ticks){ back = '<div class="duo"><div class="duo-in"><div class="pane score">'+gaugeHTML+'</div><div class="pane about"><div class="ticks">'+b.ticks.map(function(t){ return '<span>'+t+'</span>'; }).join('')+'</div></div></div></div>'; }
     else if(b.gauge){ back = '<div class="gauge"><svg viewBox="0 0 150 150"><circle class="bg" cx="75" cy="75" r="60"/><circle class="fg" cx="75" cy="75" r="60" stroke-dasharray="377" stroke-dashoffset="377" data-off="'+(377*(1-b.gauge/100)).toFixed(1)+'"/></svg><div class="val">'+b.val+'<small>'+b.unit+'</small></div></div>'; }
     else if(b.ticks){ back = '<div class="ticks">'+b.ticks.map(function(t){ return '<span>'+t+'</span>'; }).join('')+'</div>'; }
     else if(b.img){ back = '<div class="bigstat"><img src="'+b.img+'" alt="Google Project Management badge" style="width:130px;height:130px;object-fit:contain;display:block;margin:0 auto 8px"><span>'+b.label+'</span></div>'; }
@@ -787,7 +787,9 @@ h2{font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1}
   var lastType = '';
   function setFlip(b, on){
     b.classList.toggle('flipped', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    clearTimeout(b._more);
     if(!on) b.classList.remove('more');
+    else if(b.classList.contains('duo-card')) b._more = setTimeout(function(){ b.classList.add('more'); }, 2500);
     var g = b.querySelector('.gauge .fg'); if(g) g.style.strokeDashoffset = on ? g.getAttribute('data-off') : 377;
   }
   $$('.badge').forEach(function(b){
@@ -799,11 +801,6 @@ h2{font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1}
     b.addEventListener('pointermove', function(e){ var r = fr.getBoundingClientRect(); fr.style.setProperty('--px', ((e.clientX-r.left)/r.width*100)+'%'); fr.style.setProperty('--py', ((e.clientY-r.top)/r.height*100)+'%'); });
     b.addEventListener('click', function(){
       var duo = b.classList.contains('duo-card'), flipped = b.classList.contains('flipped');
-      if(duo){
-        if(lastType === 'mouse'){ if(!flipped) setFlip(b, true); else b.classList.toggle('more'); return; }
-        if(!flipped) setFlip(b, true); else if(!b.classList.contains('more')) b.classList.add('more'); else setFlip(b, false);
-        return;
-      }
       if(lastType === 'mouse') return; setFlip(b, !flipped);
     });
   });
