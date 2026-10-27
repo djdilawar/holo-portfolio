@@ -789,7 +789,7 @@ h2{font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1}
     b.classList.toggle('flipped', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
     clearTimeout(b._more);
     if(!on) b.classList.remove('more');
-    else if(b.classList.contains('duo-card')) b._more = setTimeout(function(){ b.classList.add('more'); }, 2500);
+    else if(b.classList.contains('duo-card')) b._more = setTimeout(function(){ b.classList.add('more'); }, 1500);
     var g = b.querySelector('.gauge .fg'); if(g) g.style.strokeDashoffset = on ? g.getAttribute('data-off') : 377;
   }
   $$('.badge').forEach(function(b){
